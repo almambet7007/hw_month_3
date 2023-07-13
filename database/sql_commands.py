@@ -19,3 +19,14 @@ class Database:
                                                             first_name,
                                                             last_name))
         self.connection.commit()
+
+
+    def sql_select_user(self):
+        return self.cursor.execute(sql_queries.select_user_query).fetchall()
+
+    def sql_insert_ban(self, username, first_name, last_name):
+        self.cursor.execute(sql_queries.insert_user_query, (None,
+                                                            username,
+                                                            first_name,
+                                                            last_name))
+        self.connection.commit()
