@@ -27,17 +27,21 @@ class Database:
     def sql_insert_user_form(self,user_id, telegram_id, nickname,
                              age, bio, gender, idea,problems,place,photo):
         self.cursor.execute(sql_queries.insert_user_form_query, (None,
-                                                                user_id,
-                                                                telegram_id,
-                                                                nickname,
-                                                                age,
-                                                                bio,
-                                                                gender,
-                                                                idea,
-                                                                problems,
-                                                                place,
-                                                                photo))
+                                                                 user_id,
+                                                                 telegram_id,
+                                                                 nickname,
+                                                                 age,
+                                                                 bio,
+                                                                 gender,
+                                                                 idea,
+                                                                 problems,
+                                                                 place,
+                                                                 photo))
         self.connection.commit()
+
+    def sql_select_user_form(self):
+        return self.cursor.execute(sql_queries.select_user_form).fetchall()
+
 
     def sql_select_user_by_id(self,telegram_id):
         self.cursor.row_factory = lambda cursor, row: {'id': row[0]}

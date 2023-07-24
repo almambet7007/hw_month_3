@@ -27,6 +27,10 @@ create_user_form_table_query = """
 
 """
 
+select_user_form = """SELECT * FROM user_form"""
+select_user_form_by_id = """SELECT * FROM user_form AS form
+    LEFT JOIN telegram_users AS user ON form.user_id = user.id
+    WHERE form.id = ?"""
 
 insert_user_query = """INSERT OR IGNORE INTO telegram_users VALUES (?, ?, ?, ?, ?)"""
 

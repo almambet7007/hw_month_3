@@ -12,7 +12,6 @@ class FormStates(StatesGroup):
     age = State()
     bio = State()
     gender = State()
-    # ID = State()
     idea = State()
     problems = State()
     place = State()
@@ -54,14 +53,6 @@ async def load_gender(message: types.Message,
     await FormStates.next()
     await message.reply("send me your idea, what new things we can add in our bot:")
 
-# async def load_ID(message: types.Message,
-#                   state:FSMContext):
-#     async with state.proxy() as data:
-#         data["ID"] = int(message.text)
-#     await FormStates.next()
-#     await message.reply("send me your idea, what new things we can add in our bot?")
-
-
 async def load_idea(message: types.Message,
                     state:FSMContext):
     async with state.proxy() as data:
@@ -97,17 +88,16 @@ async def load_photo(message: types.Message,
             age=data["age"],
             bio=data["bio"],
             gender=data["gender"],
-            # ID=data["ID"],
             idea=data["idea"],
             problems=data["problems"],
-            place=["place"],
+            place=data["place"],
             photo=data["photo"]
         )
 
-        # with open(path.name, 'rb') as photo:
-        #     await bot.send_photo(message.chat.id,
-        #                          photo=photo,
-        #                          caption=data)
+        with open(path.name, 'rb') as photo:
+            await bot.send_photo(message.chat.id,
+                                 photo=photo,
+                                 caption=data)
 
         await message.reply("Successful registration")
         await state.finish()
