@@ -7,6 +7,50 @@ from aiogram.types import ContentType
 from config import bot
 from database.sql_commands import  Database
 
+
+class Complaint(StatesGroup):
+    username = State()
+    reason = State()
+
+
+async def complaint_start(message: types.Message):
+    await message.reply("send me username person who offended you:")
+    await Complaint.username.set()
+
+
+async def load_complain_username(message: types.Message,
+                                 state: FSMContext):
+    async with state.proxy() as data:
+        data["username"] = message.text
+    await Complaint.next()
+    await message.reply("send me reason , why we should delete him?")
+
+async def load_complain_reason(message: types.Message,
+                                 state: FSMContext):
+    async with state.proxy() as data:
+        data["reason"] = message.text
+    Database().sql_insert_complain_users(
+        username= data["username"],
+        telegram_id= message.from_user.id,
+        telegram_id_bad_user= id(username = data["username"]),
+        reason= data["reason"],
+        count=len(data["username"])
+
+    )
+    await message.reply("successful registration!")
+    await state.finish()
+
+
+
+
+
+
+
+
+
+
+
+
 class FormStates(StatesGroup):
     nickname = State()
     age = State()
@@ -107,6 +151,14 @@ async def load_photo(message: types.Message,
 
 
 def register_handler_fsm_form(dp:Dispatcher):
+    dp.register_message_handler(complaint_start, commands=('complain'))
+    dp.register_message_handler(load_complain_username,
+                                content_types=["text"],
+                                state=Complaint.username)
+    dp.register_message_handler(load_complain_reason, state=Complaint.reason, content_types=['text'])
+
+
+
     dp.register_message_handler(fsm_start, commands=('signup'))
     dp.register_message_handler(load_nickname,
                                 content_types=['text'],

@@ -1,3 +1,7 @@
+
+
+
+
 create_user_table_query = """
         CREATE TABLE IF NOT EXISTS telegram_users
         (id INTEGER PRIMARY KEY,
@@ -40,6 +44,8 @@ select_user_query = """SELECT username FROM telegram_users"""
 
 select_user_by_id = """SELECT id FROM telegram_users WHERE telegram_id = ?"""
 
+select_user_form_by_telegram_id = """SELECT telegram_id FROM user_form WHERE telegram_id = ?"""
+
 create_answer_table = """
         CREATE TABLE IF NOT EXISTS user_answers_in_victory
         (id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -52,3 +58,18 @@ create_answer_table = """
 """
 
 insert_answer_query = """INSERT INTO user_answers_in_victory(id_user, username, quiz, quiz_option) VALUES (?,?,?,?)"""
+
+create_table_for_complain = """
+        CREATE TABLE IF NOT EXISTS complain_users
+        (id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username CHAR(50),
+        telegram_id INTEGER,
+        telegram_id_bad_user INTEGER,
+        reason TEXT,
+        count INTEGER,
+        FOREIGN KEY (telegram_id) REFERENCES telegram_users (telegram_id),
+        FOREIGN KEY (telegram_id_bad_user) REFERENCES telegram_users (username.user_id))
+        """
+
+insert_complain_users = """INSERT  INTO complain_users VALUES (?, ?, ?, ?, ?, ?)"""
+

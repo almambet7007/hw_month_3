@@ -14,7 +14,19 @@ class Database:
         self.connection.execute(sql_queries.create_user_form_table_query)
         self.connection.execute(sql_ban_queries.create_ban_table)
         self.connection.execute(sql_queries.create_answer_table)
+        self.connection.execute(sql_queries.create_table_for_complain)
         self.connection.commit()
+
+
+    def sql_insert_complain_users(self, username, telegram_id,
+                                  telegram_id_bad_user, reason,count):
+        self.cursor.execute(sql_queries.create_table_for_complain,(None,
+                                                                   username,
+                                                                   telegram_id,
+                                                                   telegram_id_bad_user,
+                                                                   reason,
+                                                                   count
+                                                                  ))
 
     def sql_insert_user(self,telegram_id, username, first_name, last_name):
         self.cursor.execute(sql_queries.insert_user_query, (None,
@@ -39,8 +51,8 @@ class Database:
                                                                  photo))
         self.connection.commit()
 
-    def sql_select_user_form(self):
-        return self.cursor.execute(sql_queries.select_user_form).fetchall()
+    # def sql_select_user_form(self,telegram_id):
+    #     return self.cursor.execute(sql_queries.select_user_form).fetchall()
 
 
     def sql_select_user_by_id(self,telegram_id):
