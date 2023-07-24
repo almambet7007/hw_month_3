@@ -20,13 +20,22 @@ class Database:
 
     def sql_insert_complain_users(self, username, telegram_id,
                                   telegram_id_bad_user, reason,count):
-        self.cursor.execute(sql_queries.create_table_for_complain,(None,
-                                                                   username,
-                                                                   telegram_id,
-                                                                   telegram_id_bad_user,
-                                                                   reason,
-                                                                   count
+        self.cursor.execute(sql_queries.insert_complain_users,(
+                                                               username,
+                                                               telegram_id,
+                                                               telegram_id_bad_user,
+                                                               reason,
+                                                               count
                                                                   ))
+        self.connection.commit()
+
+    def sql_select_complain_users(self, user_id):
+        self.cursor.row_factory = lambda cursor, row: {"count": row[0]}
+        return self.cursor.execute(sql_queries.select_complain_users_table, (user_id,))
+
+    def sql_select_complain_users_table_check(self, user_id, bad_user_id):
+        self.cursor.row_factory = lambda cursor, row: {"count": row[0]}
+        return self.cursor.execute(sql_queries.select_complain_users_table_check, (user_id, bad_user_id,))
 
     def sql_insert_user(self,telegram_id, username, first_name, last_name):
         self.cursor.execute(sql_queries.insert_user_query, (None,
@@ -51,8 +60,19 @@ class Database:
                                                                  photo))
         self.connection.commit()
 
-    # def sql_select_user_form(self,telegram_id):
-    #     return self.cursor.execute(sql_queries.select_user_form).fetchall()
+    def sql_select_user_form(self):
+        self.cursor.row_factory = lambda cursor, row: {'id': row[0]}
+        self.cursor.row_factory = lambda cursor, row: {'user_id': row[1]}
+        self.cursor.row_factory = lambda cursor, row: {'telegram_id': row[2]}
+        self.cursor.row_factory = lambda cursor, row: {'nickname': row[3]}
+        self.cursor.row_factory = lambda cursor, row: {'age': row[4]}
+        self.cursor.row_factory = lambda cursor, row: {'bio': row[5]}
+        self.cursor.row_factory = lambda cursor, row: {'gender': row[6]}
+        self.cursor.row_factory = lambda cursor, row: {'idea': row[7]}
+        self.cursor.row_factory = lambda cursor, row: {'problems': row[8]}
+        self.cursor.row_factory = lambda cursor, row: {'place': row[9]}
+        self.cursor.row_factory = lambda cursor, row: {'photo': row[10]}
+        return self.cursor.execute(sql_queries.select_user_form).fetchall()
 
 
     def sql_select_user_by_id(self,telegram_id):

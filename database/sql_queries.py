@@ -32,6 +32,7 @@ create_user_form_table_query = """
 """
 
 select_user_form = """SELECT * FROM user_form"""
+
 select_user_form_by_id = """SELECT * FROM user_form AS form
     LEFT JOIN telegram_users AS user ON form.user_id = user.id
     WHERE form.id = ?"""
@@ -68,8 +69,15 @@ create_table_for_complain = """
         reason TEXT,
         count INTEGER,
         FOREIGN KEY (telegram_id) REFERENCES telegram_users (telegram_id),
-        FOREIGN KEY (telegram_id_bad_user) REFERENCES telegram_users (username.user_id))
+        FOREIGN KEY (telegram_id_bad_user) REFERENCES telegram_users (id))
         """
 
-insert_complain_users = """INSERT  INTO complain_users VALUES (?, ?, ?, ?, ?, ?)"""
+insert_complain_users = """INSERT  INTO complain_users(username, telegram_id, telegram_id_bad_user, reason, count) 
+VALUES (?, ?, ?, ?, ?)"""
 
+
+select_complain_users_table = """ SELECT count FROM complain_users WHERE telegram_id_bad_user = ?"""
+
+select_complain_users_table_check = """
+    SELECT telegram_id FROM complain_users WHERE telegram_id = ? AND telegram_id_bad_user = ?
+"""

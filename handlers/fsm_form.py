@@ -6,7 +6,7 @@ from aiogram.types import ContentType
 
 from config import bot
 from database.sql_commands import  Database
-
+from aiogram.types import InlineKeyboardButton,InlineKeyboardMarkup
 
 class Complaint(StatesGroup):
     username = State()
@@ -32,7 +32,7 @@ async def load_complain_reason(message: types.Message,
     Database().sql_insert_complain_users(
         username= data["username"],
         telegram_id= message.from_user.id,
-        telegram_id_bad_user= id(username = data["username"]),
+        telegram_id_bad_user= message.from_user.id,
         reason= data["reason"],
         count=len(data["username"])
 
@@ -147,10 +147,20 @@ async def load_photo(message: types.Message,
         await state.finish()
 
 
-
+async def send_list_poll(message: types.Message):
+    markup = InlineKeyboardMarkup()
+    button_call_for_poll = InlineKeyboardButton(
+        "Список профилей",
+        callback_data="list_of_poll_user"
+    )
+    markup.add( button_call_for_poll)
+    if message.chat.id != -1001953753607:
+        await message.reply("ergoae!!!",
+                            reply_markup=markup) #является кнопкой (список пользователей) у сообщения
 
 
 def register_handler_fsm_form(dp:Dispatcher):
+    dp.register_message_handler(send_list_poll, lambda word: "list" in word.text)
     dp.register_message_handler(complaint_start, commands=('complain'))
     dp.register_message_handler(load_complain_username,
                                 content_types=["text"],
@@ -170,4 +180,5 @@ def register_handler_fsm_form(dp:Dispatcher):
     dp.register_message_handler(load_problems, state=FormStates.problems, content_types=['text'])
     dp.register_message_handler(load_place, state=FormStates.place, content_types=['text'])
     dp.register_message_handler(load_photo, state=FormStates.photo, content_types=ContentType.PHOTO)
+
 
