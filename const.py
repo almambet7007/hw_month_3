@@ -4,7 +4,9 @@ Commands:
 /help - description of bots functions 
 /quiz - funny poll answers with facts
 /signup - to register your form in bot
-/profiles - to view other user's profile 
+/complain - to view жаловаться на других
+/get_latest_news - to  get view of  today's latest news
+/lukizm - to get new manga
 
 
 To view your form click to the profile button.

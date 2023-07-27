@@ -16,14 +16,15 @@ async def list_user_poll(call: types.CallbackQuery):
     variant_polls = Database().sql_select_user_form()
     send_message = ""
     for variant_poll in variant_polls:
-        send_message += f'nickname: {variant_poll[0]}\n\
-                        age:  {variant_poll[1]}\n\
-                        bio :  {variant_poll[2]}\n\
-                        gender :  {variant_poll[3]}\n\
-                        idea :  {variant_poll[4]}\n\
-                        problems :  {variant_poll[5]}\n\
-                        place :  {variant_poll[6]}\n\
-                        photo :  {variant_poll[7]}\n\n'
+        send_message += f'id: {variant_poll[0]}\n\
+                        nickname: {variant_poll[1]}\n\
+                        age:  {variant_poll[2]}\n\
+                        bio :  {variant_poll[3]}\n\
+                        gender :  {variant_poll[4]}\n\
+                        idea :  {variant_poll[5]}\n\
+                        problems :  {variant_poll[6]}\n\
+                        place :  {variant_poll[7]}\n\
+                        photo :  {variant_poll[8]}\n\n'
     await bot.send_message(call.message.chat.id,send_message)
     await bot.send_message(call.message.chat.id,"выберите опросник по ID")
     await FormStates_2.variant_poll.set()
@@ -33,7 +34,7 @@ async def load_variant_poll(message: types.Message,
     async with state.proxy() as data:
         data["user_variant_poll"] = message.text
 
-    variant_poll = Database().sql_select_user_by_id(int(data["user_variant_poll"]))
+    variant_poll = Database().sql_select_user_form_by_id(int(data["user_variant_poll"]))
 
     if variant_poll:
         message_result =f'идея: {variant_poll[0][1]}\n'\
@@ -45,15 +46,16 @@ async def load_variant_poll(message: types.Message,
                      f'id пользователя: {variant_poll[0][5]}'
 
         markup = InlineKeyboardMarkup()
-        button_call_1 = InlineKeyboardButton(
-            " button_1",
-            callback_data="list_of_users"
+        button_call_for_poll = InlineKeyboardButton(
+            "Список профилей",
+            callback_data="list_of_poll_user"
         )
-        markup.add(button_call_1)
+        markup.add(button_call_for_poll)
         await message.reply(message_result, reply_markup=markup)
 
     else:
         await bot.send_message(message.chat.id, 'Нечего не найдено!')
 def register_handler_list_poll(dp: Dispatcher):
-    dp.register_message_handler(load_variant_poll,commands=["find"],state=FormStates_2.variant_poll,content_types=["text"])
+    dp.register_message_handler(load_variant_poll, lambda word: "find" in word.text,state=FormStates_2.variant_poll,content_types=["text"])
+    # dp.register_message_handler(load_variant_poll,commands=["find"],state=FormStates_2.variant_poll,content_types=["text"])
 

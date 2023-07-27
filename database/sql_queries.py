@@ -81,3 +81,26 @@ select_complain_users_table = """ SELECT count FROM complain_users WHERE telegra
 select_complain_users_table_check = """
     SELECT telegram_id FROM complain_users WHERE telegram_id = ? AND telegram_id_bad_user = ?
 """
+
+cteate_table_for_scraper_lukizm ="""
+       CREATE TABLE IF NOT EXISTS scraper_table_lukizm
+       (id INTEGER PTYMARY KEY AUOTOINCREMENT,
+       id_user INTEGER,
+       one_manga CHAR(50),             
+       two_manga CHAR(50),        
+       three_manga CHAR(50),         
+       four_manga CHAR(50),        
+       five_manga CHAR(50) ,      
+       FOREIGN KEY (id_user) REFERENCES telegram_users (id),
+       UNIQUE(id_user,one_manga,two_manga,three_manga,four_manga, five_manga ))
+
+"""
+
+insert_scraper_lukizm = """
+    INSERT OR IGNORE INTO scraper_table_lukizm(id_user,one_manga,two_manga,three_manga,four_manga, five_manga   ) 
+    VALUES (?, ?, ?, ?, ?, ?)
+"""
+
+select_scraper_lukizm = """
+    SELECT id_user,one_manga,two_manga,three_manga,four_manga, five_manga FROM scraper_table_lukizm WHERE id_user = ?
+"""

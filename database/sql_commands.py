@@ -15,6 +15,7 @@ class Database:
         self.connection.execute(sql_ban_queries.create_ban_table)
         self.connection.execute(sql_queries.create_answer_table)
         self.connection.execute(sql_queries.create_table_for_complain)
+        self.connection.execute(sql_queries.cteate_table_for_scraper_lukizm)
         self.connection.commit()
 
 
@@ -62,17 +63,22 @@ class Database:
 
     def sql_select_user_form(self):
         self.cursor.row_factory = lambda cursor, row: {'id': row[0]}
-        self.cursor.row_factory = lambda cursor, row: {'user_id': row[1]}
-        self.cursor.row_factory = lambda cursor, row: {'telegram_id': row[2]}
-        self.cursor.row_factory = lambda cursor, row: {'nickname': row[3]}
-        self.cursor.row_factory = lambda cursor, row: {'age': row[4]}
-        self.cursor.row_factory = lambda cursor, row: {'bio': row[5]}
-        self.cursor.row_factory = lambda cursor, row: {'gender': row[6]}
-        self.cursor.row_factory = lambda cursor, row: {'idea': row[7]}
-        self.cursor.row_factory = lambda cursor, row: {'problems': row[8]}
-        self.cursor.row_factory = lambda cursor, row: {'place': row[9]}
-        self.cursor.row_factory = lambda cursor, row: {'photo': row[10]}
+        # self.cursor.row_factory = lambda cursor, row: {'user_id': row[1]}
+        # self.cursor.row_factory = lambda cursor, row: {'telegram_id': row[2]}
+        self.cursor.row_factory = lambda cursor, row: {'nickname': row[1]}
+        self.cursor.row_factory = lambda cursor, row: {'age': row[2]}
+        self.cursor.row_factory = lambda cursor, row: {'bio': row[3]}
+        self.cursor.row_factory = lambda cursor, row: {'gender': row[4]}
+        self.cursor.row_factory = lambda cursor, row: {'idea': row[5]}
+        self.cursor.row_factory = lambda cursor, row: {'problems': row[6]}
+        self.cursor.row_factory = lambda cursor, row: {'place': row[7]}
+        self.cursor.row_factory = lambda cursor, row: {'photo': row[8]}
         return self.cursor.execute(sql_queries.select_user_form).fetchall()
+
+
+    def sql_select_user_form_by_id(self):
+        return self.cursor.execute(sql_queries.select_user_form_by_id,(id,)).fetchall()
+
 
 
     def sql_select_user_by_id(self,telegram_id):
@@ -99,3 +105,21 @@ class Database:
 
     def sql_select_ban_for_users(self, username, id_group):
         self.cursor.execute(sql_ban_queries.select_ban_for_users,(username,id_group)).fetchall()
+
+    def sql_insert_scraper_lukizm(self,id_user,one_manga,two_manga,three_manga,four_manga, five_manga):
+        self.cursor.execute(sql_queries.insert_scraper_lukizm,(id_user,
+                                                               one_manga,
+                                                               two_manga,
+                                                               three_manga,
+                                                               four_manga,
+                                                               five_manga
+                                                               ))
+        self.connection.commit()
+
+    def sql_select_scraper_lukizm(self, id_user):
+        self.cursor.row_factory = lambda cursor, row: {"one_manga": row[0],
+                                                       "two_manga": row[1],
+                                                       "three_manga": row[2],
+                                                       "four_manga": row[3],
+                                                       "five_manga": row[4]}
+        return self.cursor.execute(sql_queries.select_scraper_lukizm, (id_user,)).fetchall()

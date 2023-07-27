@@ -147,20 +147,32 @@ async def load_photo(message: types.Message,
         await state.finish()
 
 
-async def send_list_poll(message: types.Message):
-    markup = InlineKeyboardMarkup()
-    button_call_for_poll = InlineKeyboardButton(
-        "Список профилей",
-        callback_data="list_of_poll_user"
-    )
-    markup.add( button_call_for_poll)
-    if message.chat.id != -1001953753607:
-        await message.reply("ergoae!!!",
-                            reply_markup=markup) #является кнопкой (список пользователей) у сообщения
+# async def send_list_poll(message: types.Message):
+#     markup = InlineKeyboardMarkup()
+#     button_call_for_poll = InlineKeyboardButton(
+#         "Список профилей",
+#         callback_data="list_of_poll_user"
+#     )
+#     markup.add( button_call_for_poll)
+#     if message.chat.id != -1001953753607:
+#         await message.reply("profile!!!",
+#                             reply_markup=markup)
+
+
+class FarmStates_for_scraper_lukizm(StatesGroup):
+    one_manga = State()
+    two_manga = State()
+    three_manga = State()
+    four_manga = State()
+    five_manga = State()
+
+# async def load_manga_start()
+
+
 
 
 def register_handler_fsm_form(dp:Dispatcher):
-    dp.register_message_handler(send_list_poll, lambda word: "list" in word.text)
+    # dp.register_message_handler(send_list_poll, lambda word: "list" in word.text)
     dp.register_message_handler(complaint_start, commands=('complain'))
     dp.register_message_handler(load_complain_username,
                                 content_types=["text"],

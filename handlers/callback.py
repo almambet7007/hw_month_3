@@ -20,15 +20,15 @@ async def list_of_poll_user(call: types.CallbackQuery):
    users = Database().sql_select_user_form()
    print(users)
    print(str(users))
-   data = []
+   data_2 = []
    for user in users:
-       if not user["username"]:
-           data.append("None Username")
+       if not user[""]:
+           data_2.append("Not it's variant")
        else:
-           data.append(user["username"])
+           data_2.append(user[""])
 
-   data = '\n'.join(data)
-   await call.message.reply(data)
+   data_2 = '\n'.join(data_2)
+   await call.message.reply(data_2)
 
 
 
@@ -37,5 +37,5 @@ async def list_of_poll_user(call: types.CallbackQuery):
 
 def register_handlers_callback(dp: Dispatcher):
     dp.register_callback_query_handler(list_of_users, lambda call: call.data == "list_of_users")
-    dp.register_message_handler(list_of_poll_user, lambda call: call.data == "list_of_poll_user")
+    # dp.register_message_handler(list_of_poll_user, lambda call: call.data == "list_of_poll_user")
 

@@ -6,7 +6,8 @@ from database.sql_commands import  Database
 from aiogram.types import ParseMode, InlineKeyboardMarkup, InlineKeyboardButton
 from const import HELP_TEXT
 from keyboards import start_keyboard
-
+from scraper.news_scraper import NewScraper
+from scraper.lukizm_scraper import LukScraper
 
 async def start_button(message: types.Message):
     telegram_id = message.from_user.id
@@ -84,8 +85,28 @@ async def answer_in_poll(poll_answer: types.PollAnswer):
                                 quiz_option=poll_answer.option_ids[0])
 
 
+async def call_scraper(message: types.Message):
+    links = NewScraper().parse_data()
+    title = NewScraper().parse_data()
+    for link in links[6:9]:
+        await  message.reply(text=f"https://www.prnewswire.com {link}")
+
+
+
+async def lukizm_scraper(message: types.Message):
+    links_luk = LukScraper().get_data()
+    for link_luk in links_luk:
+     try:
+      if links_luk != []:
+           print("hello")
+      else:
+          await message.reply(text=f"https://mangalib.me{link_luk}")
+     except TypeError as S:
+         print("error in ", S)
 def register_handlers_start(dp: Dispatcher):
     dp.register_message_handler(start_button, commands=["start"])
+    dp.register_message_handler(call_scraper, commands=["get_latest_news"])
+    dp.register_message_handler( lukizm_scraper, commands=["lukizm"])
     dp.register_message_handler(help_button, commands=["help"])
     dp.register_message_handler(quiz_1, commands=["quiz"])
     dp.register_callback_query_handler(quiz_2, lambda call: call.data == "button_call_1")
