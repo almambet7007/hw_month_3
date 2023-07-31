@@ -6,6 +6,7 @@ Commands:
 /signup - to register your form in bot
 /complain - to view жаловаться на других
 /get_latest_news - to  get view of  today's latest news
+/limon_news - to get limon.kg news about IT
 /lukizm - to get new manga
 
 
